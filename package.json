@@ -1,0 +1,48 @@
+{
+  "name": "make-postgres-markdown",
+  "version": "0.1.0",
+  "description": "Builds Slate compatible markdown from a Postgres connection",
+  "author": "Caleb Brewer (caleb@cazzer.io)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cazzer/make-postgres-markdown.git"
+  },
+  "keywords": [
+    "shins",
+    "slate",
+    "swagger",
+    "openapi",
+    "api",
+    "documentation",
+    "docs",
+    "cli"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cazzer/make-postgres-markdown/issues"
+  },
+  "homepage": "https://github.com/cazzer/make-postgres-markdown#readme",
+  "main": "./lib/make-postgres-markdown",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "debug": "^3.1.0",
+    "json2md": "^1.5.10",
+    "pg-structure": "^4.0.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.3.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "scripts": {
+    "build": "babel src -d lib",
+    "lint": "eslint src/**/*.js",
+    "prepublish": "yarn run build"
+  },
+  "bin": {
+    "make-postgres-markdown": "./lib/make-postgres-markdown.js"
+  }
+}

@@ -40,7 +40,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "lint": "eslint src/**/*.js",
-    "prepublish": "yarn run build"
+    "publish-zip": "yarn run build && tar -cf make-shins.zip -X .npmignore . && npm publish make-shins.zip"
   },
   "bin": {
     "make-postgres-markdown": "./lib/make-postgres-markdown.js"

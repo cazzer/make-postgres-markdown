@@ -17,42 +17,15 @@ export default async function makeMarkdown(options) {
 
   const db = await pgStructure(options, [options.schema])
   d('Building JSON representation...')
-  const markdown = []
   const schema = db.schemas.get('public')
   const tables = schema.tables
 
-  d('tables')
-  markdown.push({ h1: 'Tables' })
-  for (let [name, table] of tables) {
-    if (ignore && ignore.exec(name)) {
-      continue
-    }
-
-    markdown.push({ h2: name })
-    const markdownTable = {
-      headers: [
-        'column',
-        'comment',
-        'type',
-        'default',
-        'constraints',
-        'values'
-      ],
-      rows: []
-    }
-
-    for (let [name, column] of table.columns) {
-      markdownTable.rows.push([
-        name || '',
-        column.comment || '',
-        column.type || '',
-        column.default || '',
-        renderConstraints(column) || '',
-        column.enumValues ? column.enumValues.join(', ') : ''
-      ])
-    }
-    markdown.push({ table: markdownTable })
-  }
+  const markdown = [
+    { h1: 'Tables' },
+    ...renderTables(tables, 'table', ignore),
+    { h1: 'Views' },
+    ...renderTables(tables, 'view', ignore),
+  ]
 
   d('Converting JSON to markdown')
   const output = json2md(markdown)
@@ -85,4 +58,45 @@ function renderConstraints(column) {
   }
 
   return constraints.length && constraints.join(', ')
+}
+
+function renderTables(tables, kind, ignore) {
+  const markdown = []
+
+  d(`rendering tables (${kind})`)
+  for (let [name, table] of tables) {
+    if (
+      table.kind !== kind
+      || (ignore && ignore.exec(name))
+    ) {
+      continue
+    }
+
+    markdown.push({ h2: name })
+    const markdownTable = {
+      headers: [
+        'column',
+        'comment',
+        'type',
+        'default',
+        'constraints',
+        'values'
+      ],
+      rows: []
+    }
+
+    for (let [name, column] of table.columns) {
+      markdownTable.rows.push([
+        name || '',
+        column.comment || '',
+        column.type || '',
+        column.default || '',
+        renderConstraints(column) || '',
+        column.enumValues ? column.enumValues.join(', ') : ''
+      ])
+    }
+    markdown.push({ table: markdownTable })
+  }
+
+  return markdown
 }

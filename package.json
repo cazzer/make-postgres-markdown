@@ -1,6 +1,6 @@
 {
   "name": "make-postgres-markdown",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Builds Slate compatible markdown from a Postgres connection",
   "author": "Caleb Brewer (caleb@cazzer.io)",
   "repository": {
@@ -8,14 +8,12 @@
     "url": "git+https://github.com/cazzer/make-postgres-markdown.git"
   },
   "keywords": [
-    "shins",
     "slate",
-    "swagger",
-    "openapi",
-    "api",
     "documentation",
     "docs",
-    "cli"
+    "cli",
+    "PostgreSQL",
+    "Markdown"
   ],
   "license": "MIT",
   "bugs": {
@@ -38,7 +36,7 @@
     "eslint-plugin-import": "^2.2.0"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel src -d lib --source-maps",
     "lint": "eslint src/**/*.js",
     "publish-zip": "yarn run build && tar -cf make-shins.zip -X .npmignore . && npm publish make-shins.zip"
   },

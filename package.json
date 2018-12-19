@@ -22,10 +22,10 @@
   "homepage": "https://github.com/cazzer/make-postgres-markdown#readme",
   "main": "./lib/make-postgres-markdown",
   "dependencies": {
-    "commander": "^2.11.0",
-    "debug": "^3.1.0",
-    "json2md": "^1.5.10",
-    "pg-structure": "^4.0.4"
+    "commander": "^2.19.0",
+    "debug": "^4.1.0",
+    "json2md": "^1.6.1",
+    "pg-structure": "^4.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

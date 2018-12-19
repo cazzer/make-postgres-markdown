@@ -49,11 +49,11 @@ pgStructure(program, [program.schema])
       const markdownTable = {
         headers: [
           'column',
-          'comment',
           'type',
-          'default',
           'constraints',
-          'values'
+          'comment',
+          'values',
+          'default'
         ],
         rows: []
       }
@@ -61,11 +61,11 @@ pgStructure(program, [program.schema])
       for (let [name, column] of table.columns) {
         markdownTable.rows.push([
           name || '',
-          column.comment || '',
           column.type || '',
-          column.default || '',
           renderConstraints(column) || '',
-          column.enumValues ? column.enumValues.join(', ') : ''
+          column.comment || '',
+          column.enumValues ? column.enumValues.join(', ') : '',
+          column.default || ''
         ])
       }
       markdown.push({ table: markdownTable })

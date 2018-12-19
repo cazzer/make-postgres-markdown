@@ -42,6 +42,10 @@ pgStructure(program, [program.schema])
       }
 
       markdown.push({ h2: name })
+      if (table.comment) {
+        markdown.push({ p: table.comment })
+      }
+
       const markdownTable = {
         headers: [
           'column',

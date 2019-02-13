@@ -1,8 +1,8 @@
 .DS_Store
 .idea
 .vscode
-lib/
 node_modules/
 *.log
 public
 *.zip
+*.md

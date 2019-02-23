@@ -2,9 +2,10 @@
 import program from 'commander'
 
 import makeMarkdown from './index'
+import { version } from '../package.json'
 
 program
-  .version('0.2.1')
+  .version(version)
   .option('-h, --host [host]', 'Host', 'localhost')
   .option('-p, --port [port]', 'Port', 5432)
   .option('-d, --database [database]', 'Database', 'localhost')

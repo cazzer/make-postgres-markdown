@@ -1,6 +1,6 @@
 {
   "name": "make-postgres-markdown",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Builds Slate compatible markdown from a Postgres connection",
   "author": "Caleb Brewer (caleb@cazzer.io)",
   "repository": {

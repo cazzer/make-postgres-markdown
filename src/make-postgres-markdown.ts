@@ -6,7 +6,7 @@ import { version } from '../package.json'
 
 program
   .version(version)
-  .option('-h, --host [host]', 'Host', 'localhost')
+  .option('-H, --host [host]', 'Host', 'localhost')
   .option('-p, --port [port]', 'Port', 5432)
   .option('-d, --database [database]', 'Database', 'localhost')
   .option('-s, --schema [schema]', 'Schema', 'public')

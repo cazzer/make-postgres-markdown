@@ -1,8 +1,8 @@
 
-import Debug from 'debug'
+import * as Debug from 'debug'
 import { writeFileSync } from 'fs'
-import json2md from 'json2md'
-import pgStructure from 'pg-structure'
+import * as json2md from 'json2md'
+import * as pgStructure from 'pg-structure'
 import { Client } from 'pg'
 
 const d = new Debug('make-postgres-markdown')

@@ -1,6 +1,6 @@
 
 import Debug from 'debug'
-import fs from 'fs'
+import { writeFileSync } from 'fs'
 import json2md from 'json2md'
 import pgStructure from 'pg-structure'
 import { Client } from 'pg'
@@ -105,7 +105,7 @@ WHERE installed_version IS NOT null;
   const output = json2md(markdown)
 
   d('Writing output')
-  fs.writeFileSync(options.output, `---
+  writeFileSync(options.output, `---
 title: Database Documentation
 
 search: true

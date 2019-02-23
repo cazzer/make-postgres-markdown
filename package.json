@@ -22,7 +22,7 @@
     "url": "https://github.com/cazzer/make-postgres-markdown/issues"
   },
   "homepage": "https://github.com/cazzer/make-postgres-markdown#readme",
-  "main": "./lib/make-postgres-markdown",
+  "main": "./lib/src/make-postgres-markdown",
   "dependencies": {
     "commander": "^2.11.0",
     "debug": "^3.1.0",
@@ -30,19 +30,18 @@
     "pg-structure": "^4.0.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-env": "^1.3.2",
+    "@types/node": "^11.9.5",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint-plugin-import": "^2.2.0",
+    "typescript": "^3.3.3333"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "tsc --pretty",
     "lint": "eslint src/**/*.js",
-    "prepublish": "yarn build"
+    "prepublish": "rm -rf ./lib && yarn build"
   },
   "bin": {
-    "make-postgres-markdown": "./lib/make-postgres-markdown.js"
+    "make-postgres-markdown": "./lib/src/make-postgres-markdown.js"
   }
 }

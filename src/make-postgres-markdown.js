@@ -4,7 +4,7 @@ import program from 'commander'
 import makeMarkdown from './index'
 
 program
-  .version('0.2.0')
+  .version('0.2.1')
   .option('-h, --host [host]', 'Host', 'localhost')
   .option('-p, --port [port]', 'Port', 5432)
   .option('-d, --database [database]', 'Database', 'localhost')

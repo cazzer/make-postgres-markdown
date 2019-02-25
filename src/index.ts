@@ -8,6 +8,12 @@ import { Client } from 'pg'
 const d = new Debug('make-postgres-markdown')
 const functionNameFromActionStatement = /execute procedure (.*)\s*\(/i
 
+const VOLATILITY_TYPES = {
+  i: 'immutable',
+  s: 'stable',
+  v: 'volatile'
+}
+
 export default async function makeMarkdown(options) {
   console.time('make-postgres-markdown')
   d('Parsing schema')
@@ -38,8 +44,13 @@ WHERE event_object_schema = '${options.schema}'
   d('Building JSON from manual queries...')
   d('Functions')
   const functions = await client.query(`
-SELECT *
+SELECT
+  pg_proc.*,
+  pg_language.lanname as language,
+  pg_type.typname as return_type
 FROM pg_catalog.pg_proc
+JOIN pg_language ON pg_language.oid = pg_proc.prolang
+JOIN pg_type ON pg_type.oid = pg_proc.prorettype
 WHERE proowner != 10
 OR proname IN (${knownFunctions.join(',')})
   `)
@@ -49,6 +60,24 @@ OR proname IN (${knownFunctions.join(',')})
 SELECT *
 FROM pg_available_extensions
 WHERE installed_version IS NOT null;
+  `)
+
+  const roles = await client.query(`
+    WITH membership AS (
+      SELECT
+        pg_auth_members.roleid AS role_id,
+        array_agg(pg_authid.rolname) AS roles
+      FROM pg_auth_members
+      JOIN pg_authid ON pg_authid.oid = pg_auth_members.member
+      GROUP BY role_id
+    )
+    SELECT
+      pg_authid.*,
+      setconfig,
+      membership.roles
+    FROM pg_authid
+    LEFT OUTER JOIN pg_db_role_setting ON pg_db_role_setting.setrole = pg_authid.oid
+    LEFT OUTER JOIN membership ON membership.role_id = pg_authid.oid;
   `)
 
   client.end()
@@ -63,6 +92,8 @@ WHERE installed_version IS NOT null;
     ...renderTables(tables, 'table', ignore),
     { h1: 'Views' },
     ...renderTables(tables, 'view', ignore),
+    { h1: 'Roles' },
+    { table: renderRoles(roles) }
   ]
 
   if (functions.rows.length) {
@@ -75,7 +106,21 @@ WHERE installed_version IS NOT null;
         h2: func.proname
       })
       markdown.push({
-        p: func.prosrc
+        table: {
+          headers: ['return type', 'volatility'],
+          rows: [
+            [func.return_type, func.provolatile]
+          ]
+        }
+      })
+      markdown.push({
+        code: {
+          // markdown doesn't know how to format languages like pgpsql
+          language: ~func.language.indexOf('sql')
+            ? 'sql'
+            : func.language,
+          content: func.prosrc
+        }
       })
     })
   }
@@ -201,6 +246,35 @@ ${output}
     }
 
     return markdown
+  }
+
+  function renderRoles(roles) {
+    return {
+      headers: [
+        'name',
+        'super user',
+        'inherits',
+        'create role',
+        'create database',
+        'can login',
+        'bypass RLS',
+        'connection limit',
+        'configuration',
+        'roles granted'
+      ],
+      rows: roles.rows.map(role => ([
+        role.rolname,
+        role.rolsuper.toString(),
+        role.rolinherit.toString(),
+        role.rolcreaterole.toString(),
+        role.rolcreatedb.toString(),
+        role.rolcanlogin.toString(),
+        role.rolbypassrls.toString(),
+        role.rolconnlimit,
+        role.setconfig || '',
+        role.roles || ''
+      ]))
+    }
   }
 }
 
